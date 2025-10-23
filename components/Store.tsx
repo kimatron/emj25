@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PRINTS } from './constants';
-import { Print, CartItem } from './types';
-import PageTransition from './components/PageTransition';
-import AnimatedTitle from './components/AnimatedTitle';
+import { PRINTS } from '../constants';
+import { Print, CartItem } from '../types';
+import PageTransition from './PageTransition';
+import AnimatedTitle from './AnimatedTitle';
 
 declare var gsap: any;
 
