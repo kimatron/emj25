@@ -16,7 +16,7 @@ const About: React.FC = () => {
                         transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
                         <img 
-                            src="https://images.unsplash.com/photo-1557053910-d9eadeed1c58?w=800&q=80" 
+                            src="/images/about/portrait.jpeg"
                             alt="Emilija Jefremova" 
                             className="object-cover w-full h-auto"
                         />
