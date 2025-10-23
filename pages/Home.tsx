@@ -5,11 +5,12 @@ import PageTransition from '../components/PageTransition';
 
 // Add your hero images here
 const HERO_IMAGES = [
+    
+    '/images/hero/hero1.jpg',
     'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1920&q=80',
-    'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80',
-    'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=80',
-    'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1920&q=80',
-    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
+    '/images/hero/hero2.jpg',
+    '/images/hero/landing.jpg',
+    '/images/hero/landing2.jpg',
 ];
 
 const Home: React.FC = () => {
