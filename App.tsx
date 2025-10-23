@@ -8,45 +8,43 @@ import Portfolio from './pages/Portfolio';
 import Store from './pages/Store';
 import About from './pages/About';
 
-declare var gsap: any;
-
 const AnimatedCursor = () => {
     const cursorRef = useRef<HTMLDivElement>(null);
     const [isHovering, setIsHovering] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
-        if (typeof gsap === 'undefined') {
-            console.warn("GSAP not loaded. Cursor animations will be disabled.");
-            return;
-        }
-
         const cursor = cursorRef.current;
         if (!cursor) return;
 
-        gsap.set(cursor, { xPercent: -50, yPercent: -50 });
-
-        const xTo = gsap.quickTo(cursor, "x", { duration: 0.5, ease: "power3" });
-        const yTo = gsap.quickTo(cursor, "y", { duration: 0.5, ease: "power3" });
-
+        // Use simple mousemove without GSAP
         const handleMouseMove = (e: MouseEvent) => {
-            xTo(e.clientX);
-            yTo(e.clientY);
+            setPosition({ x: e.clientX, y: e.clientY });
         };
-
-        window.addEventListener('mousemove', handleMouseMove);
 
         const handleMouseEnter = () => setIsHovering(true);
         const handleMouseLeave = () => setIsHovering(false);
 
-        const hoverElements = document.querySelectorAll('a, button, [data-cursor-hover]');
+        window.addEventListener('mousemove', handleMouseMove);
 
-        hoverElements.forEach(el => {
-            el.addEventListener('mouseenter', handleMouseEnter);
-            el.addEventListener('mouseleave', handleMouseLeave);
-        });
+        // Dynamically update hover elements (important for dynamically loaded content)
+        const updateHoverListeners = () => {
+            const hoverElements = document.querySelectorAll('a, button, [data-cursor-hover]');
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', handleMouseEnter);
+                el.addEventListener('mouseleave', handleMouseLeave);
+            });
+        };
+
+        updateHoverListeners();
+        
+        // Re-check for new elements every 500ms (for dynamic content)
+        const interval = setInterval(updateHoverListeners, 500);
 
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);
+            clearInterval(interval);
+            const hoverElements = document.querySelectorAll('a, button, [data-cursor-hover]');
             hoverElements.forEach(el => {
                 el.removeEventListener('mouseenter', handleMouseEnter);
                 el.removeEventListener('mouseleave', handleMouseLeave);
@@ -57,12 +55,17 @@ const AnimatedCursor = () => {
     return (
         <motion.div
             ref={cursorRef}
-            className="fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-white pointer-events-none z-50 hidden md:block"
+            className="fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-white pointer-events-none z-[100] hidden md:block"
+            style={{
+                left: position.x,
+                top: position.y,
+                transform: 'translate(-50%, -50%)',
+            }}
             animate={{
                 scale: isHovering ? 1.5 : 1,
                 backgroundColor: isHovering ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
             }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 28 }}
         />
     );
 };

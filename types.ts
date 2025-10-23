@@ -24,3 +24,31 @@ export interface Print {
   description: string;
   price: number;
 }
+
+export interface PrintSize {
+  id: string;
+  name: string;
+  priceModifier: number;
+}
+
+export interface PaperType {
+  id: string;
+  name: string;
+  priceModifier: number;
+}
+
+export interface FrameOption {
+  id: string;
+  name: string;
+  priceModifier: number;
+}
+
+export interface CartItem {
+  id: string;
+  print: Print;
+  size: PrintSize;
+  paper: PaperType;
+  frame: FrameOption;
+  quantity: number;
+  totalPrice: number;
+}
