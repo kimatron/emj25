@@ -7,6 +7,8 @@ import Home from './pages/Home';
 import Portfolio from './pages/Portfolio';
 import Store from './pages/Store';
 import About from './pages/About';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 const AnimatedCursor = () => {
     const cursorRef = useRef<HTMLDivElement>(null);
@@ -17,7 +19,6 @@ const AnimatedCursor = () => {
         const cursor = cursorRef.current;
         if (!cursor) return;
 
-        // Use simple mousemove without GSAP
         const handleMouseMove = (e: MouseEvent) => {
             setPosition({ x: e.clientX, y: e.clientY });
         };
@@ -27,7 +28,6 @@ const AnimatedCursor = () => {
 
         window.addEventListener('mousemove', handleMouseMove);
 
-        // Dynamically update hover elements (important for dynamically loaded content)
         const updateHoverListeners = () => {
             const hoverElements = document.querySelectorAll('a, button, [data-cursor-hover]');
             hoverElements.forEach(el => {
@@ -37,8 +37,6 @@ const AnimatedCursor = () => {
         };
 
         updateHoverListeners();
-        
-        // Re-check for new elements every 500ms (for dynamic content)
         const interval = setInterval(updateHoverListeners, 500);
 
         return () => {
@@ -70,15 +68,41 @@ const AnimatedCursor = () => {
     );
 };
 
+const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const location = useLocation();
+    const isAdminRoute = location.pathname.startsWith('/admin');
+
+    if (isAdminRoute) {
+        return <>{children}</>;
+    }
+
+    return (
+        <>
+            <Header />
+            <main className="flex-grow pb-24">
+                {children}
+            </main>
+            <Footer />
+        </>
+    );
+};
+
 const AnimatedRoutes = () => {
     const location = useLocation();
+    const isAdminRoute = location.pathname.startsWith('/admin');
+
     return (
         <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
+                {/* Public Routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/store" element={<Store />} />
                 <Route path="/about" element={<About />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin" element={<AdminLogin />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
             </Routes>
         </AnimatePresence>
     );
@@ -89,11 +113,9 @@ function App() {
     <HashRouter>
         <AnimatedCursor />
         <div className="min-h-screen bg-[#0a0a0a] text-neutral-200 flex flex-col">
-            <Header />
-            <main className="flex-grow pb-24">
+            <MainLayout>
                 <AnimatedRoutes />
-            </main>
-            <Footer />
+            </MainLayout>
         </div>
     </HashRouter>
   );
