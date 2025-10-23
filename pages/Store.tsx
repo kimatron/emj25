@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PRINTS } from '../constants';
-import { Print, CartItem } from '../types';
+import { Print } from '../types';
 import PageTransition from '../components/PageTransition';
 import AnimatedTitle from '../components/AnimatedTitle';
 
-declare var gsap: any;
+// Import checkout function (adjust path if needed)
+// For now, we'll use a simple checkout simulation
 
 const PRINT_SIZES = [
   { id: '8x10', name: '8" × 10"', priceModifier: 0 },
@@ -27,6 +28,16 @@ const FRAME_OPTIONS = [
   { id: 'white', name: 'White Oak', priceModifier: 35 },
   { id: 'natural', name: 'Natural Wood', priceModifier: 45 },
 ];
+
+interface CartItem {
+  id: string;
+  print: Print;
+  size: typeof PRINT_SIZES[0];
+  paper: typeof PAPER_TYPES[0];
+  frame: typeof FRAME_OPTIONS[0];
+  quantity: number;
+  totalPrice: number;
+}
 
 interface ProductModalProps {
   print: Print;
@@ -200,9 +211,10 @@ interface ShoppingCartProps {
   onClose: () => void;
   onRemoveItem: (id: string) => void;
   onUpdateQuantity: (id: string, quantity: number) => void;
+  onCheckout: () => void;
 }
 
-const ShoppingCart: React.FC<ShoppingCartProps> = ({ items, onClose, onRemoveItem, onUpdateQuantity }) => {
+const ShoppingCart: React.FC<ShoppingCartProps> = ({ items, onClose, onRemoveItem, onUpdateQuantity, onCheckout }) => {
   const subtotal = items.reduce((sum, item) => sum + item.totalPrice, 0);
   const shipping = subtotal > 100 ? 0 : 12.50;
   const total = subtotal + shipping;
@@ -297,6 +309,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ items, onClose, onRemoveIte
               </div>
 
               <button
+                onClick={onCheckout}
                 className="w-full py-4 bg-white text-black font-medium tracking-wider text-sm hover:bg-neutral-100 transition-colors"
               >
                 CHECKOUT
@@ -342,6 +355,7 @@ const Store: React.FC = () => {
       }
       return [...prev, item];
     });
+    setShowCart(true);
   };
 
   const handleRemoveItem = (id: string) => {
@@ -357,6 +371,34 @@ const Store: React.FC = () => {
         }
         return item;
       })
+    );
+  };
+
+  const handleCheckout = () => {
+    // Calculate totals
+    const subtotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
+    const shipping = subtotal > 100 ? 0 : 12.50;
+    const total = subtotal + shipping;
+
+    // Show demo checkout
+    const items = cartItems.map(item => 
+      `${item.print.title} (${item.size.name}, ${item.paper.name}${item.frame.id !== 'none' ? `, ${item.frame.name}` : ''}) x${item.quantity} - €${item.totalPrice.toFixed(2)}`
+    ).join('\n');
+
+    alert(
+      `🛒 CHECKOUT\n\n` +
+      `${items}\n\n` +
+      `Subtotal: €${subtotal.toFixed(2)}\n` +
+      `Shipping: €${shipping.toFixed(2)}\n` +
+      `Total: €${total.toFixed(2)}\n\n` +
+      `Stripe integration will process this payment when deployed!\n\n` +
+      `For now, this is a demo. The real checkout will:\n` +
+      `✓ Open Stripe payment form\n` +
+      `✓ Collect card details securely\n` +
+      `✓ Collect shipping address\n` +
+      `✓ Process payment\n` +
+      `✓ Send order to admin\n` +
+      `✓ Email receipts to customer`
     );
   };
 
@@ -405,6 +447,7 @@ const Store: React.FC = () => {
             onClose={() => setShowCart(false)}
             onRemoveItem={handleRemoveItem}
             onUpdateQuantity={handleUpdateQuantity}
+            onCheckout={handleCheckout}
           />
         )}
       </AnimatePresence>

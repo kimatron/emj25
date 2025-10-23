@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -23,21 +23,47 @@ const NavItem: React.FC<{ to: string; children: React.ReactNode; onClick?: () =>
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
 
     const toggleMenu = () => setIsOpen(!isOpen);
 
+    // Detect scroll for background
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <header className="fixed top-0 left-0 right-0 z-40 p-4 sm:p-6 bg-[#0a0a0a]/80 backdrop-blur-sm">
+        <motion.header 
+            className={`fixed top-0 left-0 right-0 z-40 p-4 sm:p-6 transition-all duration-300 ${
+                scrolled ? 'bg-[#0a0a0a]/95 backdrop-blur-md' : 'bg-transparent'
+            }`}
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             <div className="container mx-auto flex justify-between items-center">
-                <NavLink to="/" className="text-3xl font-heading tracking-wider z-50">
-                    EMJCAMERA
+                {/* Logo */}
+                <NavLink to="/" className="z-50 flex items-center">
+                    <img 
+                        src="/emjlogo-removebg-preview.png" 
+                        alt="EMJ Camera" 
+                        className="h-12 sm:h-14 w-auto"
+                    />
                 </NavLink>
+
+                {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center space-x-8">
                     <NavItem to="/">Home</NavItem>
                     <NavItem to="/portfolio">Portfolio</NavItem>
                     <NavItem to="/store">Store</NavItem>
                     <NavItem to="/about">About</NavItem>
                 </nav>
+
+                {/* Mobile Menu Button */}
                 <div className="md:hidden z-50">
                     <button onClick={toggleMenu} className="focus:outline-none">
                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,6 +72,8 @@ const Header: React.FC = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Mobile Menu */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -64,7 +92,7 @@ const Header: React.FC = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </header>
+        </motion.header>
     );
 };
 
