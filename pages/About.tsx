@@ -1,16 +1,153 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 import AnimatedTitle from '../components/AnimatedTitle';
 
+// Declare global GSAP type
+declare global {
+    interface Window {
+        gsap: any;
+        ScrollTrigger: any;
+    }
+}
+
+const gsap = typeof window !== 'undefined' ? window.gsap : null;
+
+// Publication logos
+const PUBLICATIONS = [
+  { name: 'Irish Independent', logo: '/images/logos/irishindependent.png' },
+  { name: 'The Irish Times', logo: '/images/logos/irishtimes.png' },
+  { name: 'Reuters', logo: '/images/logos/reuters_black.jpeg' },
+  { name: 'RTÉ News', logo: '/images/logos/reuters1.png' },
+  { name: 'The Irish Examiner', logo: '📄' },
+];
+
+// Featured work - these will be newspaper/magazine clippings
+const FEATURED_WORK = [
+  {
+    id: 1,
+    title: 'Irish Independent Front Page',
+    publication: 'Irish Independent',
+    date: 'January 2025',
+    image: '/images/featured/news1.jpg',
+    description: 'Snow storm coverage - front page feature',
+  },
+  {
+    id: 2,
+    title: 'Weather Warning Coverage',
+    publication: 'National Newspaper',
+    date: 'January 2025',
+    image: '/images/featured/news2.jpg',
+    description: 'Featured weather photography',
+  },
+];
+
+interface ContactFormData {
+  name: string;
+  email: string;
+  eventType: string;
+  date: string;
+  budget: string;
+  message: string;
+}
+
 const About: React.FC = () => {
+    const [formData, setFormData] = useState<ContactFormData>({
+        name: '',
+        email: '',
+        eventType: '',
+        date: '',
+        budget: '',
+        message: '',
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitMessage, setSubmitMessage] = useState('');
+    const [selectedWork, setSelectedWork] = useState<typeof FEATURED_WORK[0] | null>(null);
+
+    useEffect(() => {
+        // GSAP scroll animations
+        if (!gsap) return;
+        
+        const ScrollTrigger = window.ScrollTrigger;
+        if (ScrollTrigger) {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Parallax effect on hero image
+            gsap.to('.about-portrait', {
+                yPercent: 20,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.about-hero',
+                    scrub: 1,
+                },
+            });
+
+            // Stagger publication logos
+            gsap.from('.publication-logo', {
+                scrollTrigger: {
+                    trigger: '.publications-section',
+                    start: 'top center+=100',
+                },
+                y: 30,
+                opacity: 0,
+                stagger: 0.1,
+                duration: 0.6,
+            });
+
+            // Featured work items
+            gsap.from('.featured-item', {
+                scrollTrigger: {
+                    trigger: '.featured-section',
+                    start: 'top center+=100',
+                },
+                y: 50,
+                opacity: 0,
+                stagger: 0.15,
+                duration: 0.8,
+            });
+        }
+    }, []);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            // TODO: Implement email API
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            setSubmitMessage('Thank you! I\'ll get back to you soon.');
+            setFormData({
+                name: '',
+                email: '',
+                eventType: '',
+                date: '',
+                budget: '',
+                message: '',
+            });
+        } catch (error) {
+            setSubmitMessage('Something went wrong. Please email me directly.');
+        } finally {
+            setIsSubmitting(false);
+            setTimeout(() => setSubmitMessage(''), 5000);
+        }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
     return (
         <PageTransition>
             <div className="container mx-auto px-4 sm:px-6 py-24 sm:py-32">
-                <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+                
+                {/* Hero Section - Bio */}
+                <div className="about-hero flex flex-col lg:flex-row items-center gap-12 lg:gap-24 mb-32">
                     <motion.div 
-                        className="w-full lg:w-1/2"
+                        className="w-full lg:w-1/2 overflow-hidden"
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -18,7 +155,7 @@ const About: React.FC = () => {
                         <img 
                             src="/images/about/portrait.jpeg"
                             alt="Emilija Jefremova" 
-                            className="object-cover w-full h-auto"
+                            className="about-portrait object-cover w-full h-auto"
                         />
                     </motion.div>
                     <motion.div 
@@ -29,27 +166,247 @@ const About: React.FC = () => {
                     >
                         <AnimatedTitle text="About Me" className="text-6xl sm:text-8xl" />
                         <h2 className="text-2xl font-medium mt-2 text-neutral-300">Emilija Jefremova</h2>
-                        <div className="prose prose-invert mt-6 text-neutral-300 max-w-none">
+                        <div className="prose prose-invert mt-6 text-neutral-300 max-w-none space-y-4">
                             <p>
                                 Originally from Lithuania and now based in the vibrant city of Galway, Ireland, I am a passionate photographer with a keen eye for capturing fleeting moments and transforming them into lasting visual narratives. My work is a blend of documentary honesty and artistic expression.
                             </p>
                             <p>
                                 I specialize in a wide range of photography, including theatre, live music, corporate events, and evocative landscapes. My goal is to tell a story with every shot, whether it's the raw energy of a concert, the dramatic tension of a stage play, or the serene beauty of the Irish countryside.
                             </p>
-                             <p>
-                                I am available for commissions, collaborations, and grant-funded projects. Let's create something beautiful together.
+                            <p>
+                                My work has been featured in major publications including the Irish Independent, The Irish Times, and Reuters, covering everything from breaking news to cultural events across Ireland.
                             </p>
                         </div>
-                        <a 
-                            href="mailto:hello@emjcamera.com"
-                            className="inline-block mt-8 px-8 py-3 border-2 border-white text-white text-lg font-medium tracking-wider uppercase transition-all duration-300 hover:bg-white hover:text-black"
-                            data-cursor-hover
-                        >
-                            Get In Touch
-                        </a>
                     </motion.div>
                 </div>
+
+                {/* As Seen In - Publications */}
+                <motion.div 
+                    className="publications-section mb-32 border-t border-neutral-800 pt-16"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <h3 className="font-heading text-4xl tracking-wider text-center mb-12">AS SEEN IN</h3>
+                    <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+                        {PUBLICATIONS.map((pub, index) => (
+                            <div 
+                                key={pub.name}
+                                className="publication-logo text-center"
+                            >
+                                <div className="text-5xl mb-2">{pub.logo}</div>
+                                <p className="text-xs text-neutral-400 tracking-wider">{pub.name}</p>
+                            </div>
+                        ))}
+                    </div>
+                </motion.div>
+
+                {/* Featured Work */}
+                <motion.div 
+                    className="featured-section mb-32"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <div className="text-center mb-16">
+                        <h3 className="font-heading text-4xl tracking-wider mb-4">FEATURED WORK</h3>
+                        <p className="text-neutral-400 max-w-2xl mx-auto">
+                            A selection of published work from national newspapers and international news agencies
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {FEATURED_WORK.map((work, index) => (
+                            <motion.div
+                                key={work.id}
+                                className="featured-item group cursor-pointer"
+                                onClick={() => setSelectedWork(work)}
+                                whileHover={{ y: -8 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <div className="relative overflow-hidden aspect-[3/4] bg-neutral-900 mb-4">
+                                    <img
+                                        src={work.image}
+                                        alt={work.title}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-neutral-500 mb-1">{work.publication} • {work.date}</p>
+                                    <h4 className="font-medium text-lg mb-2">{work.title}</h4>
+                                    <p className="text-sm text-neutral-400">{work.description}</p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+
+                {/* Contact Form */}
+                <motion.div 
+                    className="max-w-3xl mx-auto border-t border-neutral-800 pt-16"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <div className="text-center mb-12">
+                        <h3 className="font-heading text-4xl tracking-wider mb-4">GET IN TOUCH</h3>
+                        <p className="text-neutral-400 max-w-xl mx-auto">
+                            Available for commissions, editorial assignments, and collaborations. 
+                            Fill out the form below and I'll get back to you within 24 hours.
+                        </p>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="floating-label-group">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors"
+                                    placeholder="Your Name"
+                                />
+                            </div>
+                            <div className="floating-label-group">
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors"
+                                    placeholder="Email Address"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <select
+                                name="eventType"
+                                value={formData.eventType}
+                                onChange={handleChange}
+                                required
+                                className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors text-neutral-300"
+                            >
+                                <option value="" disabled>Select Event Type</option>
+                                <option value="theatre">Theatre Performance</option>
+                                <option value="music">Music / Concert</option>
+                                <option value="wedding">Wedding</option>
+                                <option value="corporate">Corporate Event</option>
+                                <option value="editorial">Editorial / Press</option>
+                                <option value="portrait">Portrait Session</option>
+                                <option value="landscape">Landscape / Travel</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <input
+                                    type="date"
+                                    name="date"
+                                    value={formData.date}
+                                    onChange={handleChange}
+                                    className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors text-neutral-300"
+                                />
+                                <p className="text-xs text-neutral-500 mt-1">Event Date (optional)</p>
+                            </div>
+                            <div>
+                                <input
+                                    type="text"
+                                    name="budget"
+                                    value={formData.budget}
+                                    onChange={handleChange}
+                                    placeholder="Budget Range (optional)"
+                                    className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <textarea
+                                name="message"
+                                value={formData.message}
+                                onChange={handleChange}
+                                required
+                                rows={6}
+                                placeholder="Tell me about your project..."
+                                className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors resize-none"
+                            />
+                        </div>
+
+                        <motion.button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="w-full px-8 py-4 bg-white text-black font-medium tracking-wider uppercase transition-all duration-300 hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                            whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                        >
+                            {isSubmitting ? 'SENDING...' : 'SEND INQUIRY'}
+                        </motion.button>
+
+                        {submitMessage && (
+                            <motion.p 
+                                className="text-center text-sm text-neutral-300"
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                            >
+                                {submitMessage}
+                            </motion.p>
+                        )}
+                    </form>
+
+                    <div className="text-center mt-8 text-sm text-neutral-400">
+                        Or email me directly at{' '}
+                        <a href="mailto:hello@emjcamera.com" className="text-white hover:underline">
+                            hello@emjcamera.com
+                        </a>
+                    </div>
+                </motion.div>
+
             </div>
+
+            {/* Featured Work Lightbox */}
+            {selectedWork && (
+                <motion.div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setSelectedWork(null)}
+                >
+                    <motion.div
+                        className="relative max-w-5xl w-full"
+                        initial={{ scale: 0.9 }}
+                        animate={{ scale: 1 }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            onClick={() => setSelectedWork(null)}
+                            className="absolute -top-12 right-0 text-white text-4xl hover:text-neutral-400 transition-colors"
+                        >
+                            ×
+                        </button>
+                        <img
+                            src={selectedWork.image}
+                            alt={selectedWork.title}
+                            className="w-full h-auto"
+                        />
+                        <div className="mt-6 text-center">
+                            <p className="text-sm text-neutral-400 mb-2">
+                                {selectedWork.publication} • {selectedWork.date}
+                            </p>
+                            <h4 className="text-2xl font-medium mb-2">{selectedWork.title}</h4>
+                            <p className="text-neutral-300">{selectedWork.description}</p>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
         </PageTransition>
     );
 };
