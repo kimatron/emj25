@@ -83,9 +83,9 @@ const Footer: React.FC = () => {
                     <div>
                         <h3 className="font-heading text-lg text-white tracking-wider mb-4">Connect</h3>
                         <div className="flex space-x-4 mb-6">
-                            <SocialLink href="https://instagram.com" icon={<FaInstagram size={24} />} label="Instagram" />
-                            <SocialLink href="https://facebook.com" icon={<FaFacebook size={24} />} label="Facebook" />
-                            <SocialLink href="https://linkedin.com" icon={<FaLinkedin size={24} />} label="LinkedIn" />
+                            <SocialLink href="https://www.instagram.com/emjcamera/" icon={<FaInstagram size={24} />} label="Instagram" />
+                            <SocialLink href="https://www.facebook.com/emjcamera/" icon={<FaFacebook size={24} />} label="Facebook" />
+                            <SocialLink href="https://www.linkedin.com/in/emilijajefremova/" icon={<FaLinkedin size={24} />} label="LinkedIn" />
                         </div>
                         <p className="text-neutral-500 text-xs">
                             Follow for latest work and updates
