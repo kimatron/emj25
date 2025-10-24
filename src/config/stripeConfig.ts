@@ -3,9 +3,6 @@ import { loadStripe } from '@stripe/stripe-js';
 // Your Stripe publishable key
 const stripePublishableKey = 'pk_test_51SLVphAtKse6jThUnFea1U8hrHWeLDT1LaDYHoyechEwvZsTetTi6pL0VMcSzdpW2uzfcvHeKQv1VmBrJVJzJfBU005IYKrNmT';
 
-// Initialize Stripe
-const stripePromise = loadStripe(stripePublishableKey);
-
 export interface CheckoutItem {
     name: string;
     description: string;
@@ -21,12 +18,8 @@ export const createCheckout = async (
     onError?: (error: any) => void
 ) => {
     try {
-        const stripe = await stripePromise;
+        console.log('Starting checkout with items:', items);
         
-        if (!stripe) {
-            throw new Error('Stripe failed to load');
-        }
-
         // Call serverless function to create checkout session
         const response = await fetch('/api/create-checkout', {
             method: 'POST',
@@ -40,28 +33,59 @@ export const createCheckout = async (
             }),
         });
 
+        console.log('Response status:', response.status);
+
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Failed to create checkout session');
+            const errorText = await response.text();
+            console.error('Server response:', errorText);
+            
+            let errorMessage = 'Failed to create checkout session';
+            try {
+                const errorData = JSON.parse(errorText);
+                errorMessage = errorData.error || errorMessage;
+            } catch (e) {
+                errorMessage = errorText || errorMessage;
+            }
+            
+            throw new Error(errorMessage);
         }
 
-        const { sessionId } = await response.json();
+        const data = await response.json();
+        console.log('Checkout data received:', data);
 
-        // Redirect to Stripe Checkout
-        const result = await stripe.redirectToCheckout({ sessionId });
+        const { sessionId, url } = data;
 
-        if (result.error) {
-            throw result.error;
+        if (!sessionId && !url) {
+            throw new Error('No session ID or URL returned from server');
         }
 
+        // Modern Stripe API: Use the URL directly (preferred method)
+        if (url) {
+            console.log('Redirecting to Stripe checkout:', url);
+            window.location.href = url;
+            if (onSuccess) onSuccess();
+            return;
+        }
+
+        // Fallback: Load Stripe and use session ID
+        console.log('Using sessionId fallback');
+        const stripe = await loadStripe(stripePublishableKey);
+        
+        if (!stripe) {
+            throw new Error('Stripe failed to load');
+        }
+
+        // Use the modern method that doesn't require redirectToCheckout
+        window.location.href = `https://checkout.stripe.com/pay/${sessionId}`;
+        
         if (onSuccess) onSuccess();
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Checkout error:', error);
         if (onError) {
             onError(error);
         } else {
-            alert('Payment failed. Please try again.');
+            alert(`Payment failed: ${error.message || 'Please try again.'}`);
         }
     }
 };
@@ -103,10 +127,8 @@ export const demoCheckout = async (
             });
         }, 1000);
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Demo checkout error:', error);
         onError(error);
     }
 };
-
-export { stripePromise };

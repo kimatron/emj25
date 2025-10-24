@@ -1,10 +1,16 @@
-// Stripe Checkout Serverless Function
-// Location: /api/create-checkout.js
-
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
-    // Only allow POST requests
+module.exports = async (req, res) => {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Handle preflight
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -14,25 +20,36 @@ export default async function handler(req, res) {
 
         // Validate items
         if (!items || !Array.isArray(items) || items.length === 0) {
-            return res.status(400).json({ error: 'Invalid items' });
+            return res.status(400).json({ error: 'Invalid items: must be a non-empty array' });
         }
 
-        // Create line items for Stripe
-        const lineItems = items.map(item => ({
-            price_data: {
-                currency: 'eur',
-                product_data: {
-                    name: item.name,
-                    description: item.description,
-                    images: item.image ? [item.image] : [],
-                },
-                unit_amount: Math.round(item.price * 100), // Convert euros to cents
-            },
-            quantity: item.quantity,
-        }));
+        console.log('Creating checkout for items:', items);
 
-        // Add shipping costs as a line item
-        const shippingCost = calculateShipping(items);
+        // Create line items for Stripe
+        const lineItems = items.map(item => {
+            if (!item.name || !item.price || !item.quantity) {
+                throw new Error('Each item must have name, price, and quantity');
+            }
+            
+            return {
+                price_data: {
+                    currency: 'eur',
+                    product_data: {
+                        name: item.name,
+                        description: item.description || '',
+                        images: item.image ? [item.image] : [],
+                    },
+                    unit_amount: Math.round(item.price * 100), // Convert to cents
+                },
+                quantity: item.quantity,
+            };
+        });
+
+        // Calculate shipping
+        const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const shippingCost = subtotal >= 100 ? 0 : 12.50;
+
+        // Add shipping as line item if applicable
         if (shippingCost > 0) {
             lineItems.push({
                 price_data: {
@@ -47,6 +64,8 @@ export default async function handler(req, res) {
             });
         }
 
+        console.log('Creating Stripe session with line items:', lineItems.length);
+
         // Create Stripe Checkout Session
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -57,36 +76,25 @@ export default async function handler(req, res) {
             shipping_address_collection: {
                 allowed_countries: ['IE', 'GB', 'US', 'CA', 'AU', 'FR', 'DE', 'ES', 'IT', 'NL', 'BE'],
             },
-            customer_email: req.body.customerEmail || undefined,
             metadata: {
                 orderType: 'print',
                 source: 'emjcamera-website',
             },
         });
 
-        // Return session ID to client
-        res.status(200).json({ sessionId: session.id });
+        console.log('Stripe session created:', session.id);
+
+        // Return both session ID and URL for flexibility
+        res.status(200).json({ 
+            sessionId: session.id,
+            url: session.url 
+        });
 
     } catch (error) {
         console.error('Stripe error:', error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ 
+            error: error.message || 'Internal server error',
+            details: error.toString()
+        });
     }
-}
-
-// Calculate shipping cost based on items
-function calculateShipping(items) {
-    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-    
-    // Free shipping over €100
-    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    if (subtotal >= 100) {
-        return 0;
-    }
-    
-    // €12.50 for first item, €5 for each additional
-    if (totalItems === 1) {
-        return 12.50;
-    } else {
-        return 12.50 + ((totalItems - 1) * 5);
-    }
-}
+};
