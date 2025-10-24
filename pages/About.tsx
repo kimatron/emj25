@@ -44,6 +44,22 @@ const FEATURED_WORK = [
     // When your images are uploaded, change to: '/images/featured/news2.jpg'
     description: 'Featured weather photography',
   },
+    {
+    id: 1,
+    title: 'Zelensky Martin Meeting in Shannon',
+    publication: 'Irish Independent',
+    date: 'February 2025',
+    image: '/images/featured/news4.jpg',
+    description: 'Zelensky Martin Meeting in Shannon',
+  },
+    {
+    id: 1,
+    title: 'Irish Times Front Page',
+    publication: 'Irish Times',
+    date: 'October 2022',
+    image: '/images/featured/news3.jpg',
+    description: 'Macnas Con Mor - front page feature',
+  },
 ];
 
 interface ContactFormData {
