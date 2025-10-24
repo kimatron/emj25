@@ -18,13 +18,13 @@ const PUBLICATIONS = [
   { name: 'Irish Independent', logo: '/images/logos/irish-independent.png' },
   { name: 'The Irish Times', logo: '/images/logos/irishtimes.png' },
   { name: 'Reuters', logo: '/images/logos/reuters1.png' },
-  { name: 'RTÉ News', logo: '/images/logos/rte.jpg' },  // Fixed: added leading /
+  { name: 'RTÉ News', logo: '/images/logos/rte.jpg' },
   { name: 'The Irish Examiner', logo: '📄' },
-  { name: 'Galway Now', logo: '/images/logos/glwaynow.jpg' },
+  { name: 'Galway Now', logo: '/images/logos/galwaynow.jpg' },
   { name: 'Food & Wine', logo: '/images/logos/foodwine.jpg' },
 ];
 
-// Featured work - these will be newspaper/magazine clippings
+// Featured work - newspaper/magazine clippings
 const FEATURED_WORK = [
   {
     id: 1,
@@ -32,7 +32,6 @@ const FEATURED_WORK = [
     publication: 'Irish Independent',
     date: 'January 2025',
     image: '/images/featured/news1.jpg',
-    // When your images are uploaded, change to: '/images/featured/news1.jpg'
     description: 'Snow storm coverage - front page feature',
   },
   {
@@ -41,19 +40,18 @@ const FEATURED_WORK = [
     publication: 'National Newspaper',
     date: 'January 2025',
     image: '/images/featured/news2.jpg',
-    // When your images are uploaded, change to: '/images/featured/news2.jpg'
     description: 'Featured weather photography',
   },
-    {
-    id: 1,
+  {
+    id: 3,
     title: 'Zelensky Martin Meeting in Shannon',
     publication: 'Irish Independent',
     date: 'February 2025',
     image: '/images/featured/news4.jpg',
     description: 'Zelensky Martin Meeting in Shannon',
   },
-    {
-    id: 1,
+  {
+    id: 4,
     title: 'Irish Times Front Page',
     publication: 'Irish Times',
     date: 'October 2022',
@@ -234,7 +232,7 @@ const About: React.FC = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {FEATURED_WORK.map((work, index) => (
+                        {FEATURED_WORK.map((work) => (
                             <div
                                 key={work.id}
                                 className="featured-item group cursor-pointer transition-transform hover:-translate-y-2 duration-300"
@@ -258,13 +256,7 @@ const About: React.FC = () => {
                 </div>
 
                 {/* Contact Form */}
-                <motion.div 
-                    className="max-w-3xl mx-auto border-t border-neutral-800 pt-16"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                >
+                <div className="max-w-3xl mx-auto border-t border-neutral-800 pt-16">
                     <div className="text-center mb-12">
                         <h3 className="font-heading text-4xl tracking-wider mb-4">GET IN TOUCH</h3>
                         <p className="text-neutral-400 max-w-xl mx-auto">
@@ -274,40 +266,50 @@ const About: React.FC = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Name and Email Row */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="floating-label-group">
+                            <div className="relative group">
                                 <input
                                     type="text"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
                                     required
-                                    className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors"
-                                    placeholder="Your Name"
+                                    className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300"
+                                    placeholder="Your Name *"
                                 />
+                                <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
                             </div>
-                            <div className="floating-label-group">
+                            <div className="relative group">
                                 <input
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
                                     required
-                                    className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors"
-                                    placeholder="Email Address"
+                                    className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300"
+                                    placeholder="Email Address *"
                                 />
+                                <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
                             </div>
                         </div>
 
-                        <div>
+                        {/* Event Type Dropdown - NO EMOJIS */}
+                        <div className="relative group">
                             <select
                                 name="eventType"
                                 value={formData.eventType}
                                 onChange={handleChange}
                                 required
-                                className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors text-neutral-300"
+                                className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300 text-neutral-200 appearance-none cursor-pointer"
+                                style={{
+                                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'right 1rem center',
+                                    backgroundSize: '1.5rem'
+                                }}
                             >
-                                <option value="" disabled>Select Event Type</option>
+                                <option value="" disabled>Select Event Type *</option>
                                 <option value="theatre">Theatre Performance</option>
                                 <option value="music">Music / Concert</option>
                                 <option value="wedding">Wedding</option>
@@ -317,71 +319,80 @@ const About: React.FC = () => {
                                 <option value="landscape">Landscape / Travel</option>
                                 <option value="other">Other</option>
                             </select>
+                            <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
                         </div>
 
+                        {/* Date and Budget Row */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
+                            <div className="relative group">
                                 <input
                                     type="date"
                                     name="date"
                                     value={formData.date}
                                     onChange={handleChange}
-                                    className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors text-neutral-300"
+                                    className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300 text-neutral-200"
                                 />
-                                <p className="text-xs text-neutral-500 mt-1">Event Date (optional)</p>
+                                <p className="text-xs text-neutral-500 mt-2 ml-1">Event Date (optional)</p>
+                                <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
                             </div>
-                            <div>
+                            <div className="relative group">
                                 <input
                                     type="text"
                                     name="budget"
                                     value={formData.budget}
                                     onChange={handleChange}
                                     placeholder="Budget Range (optional)"
-                                    className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors"
+                                    className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300"
                                 />
+                                <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
                             </div>
                         </div>
 
-                        <div>
+                        {/* Message Textarea */}
+                        <div className="relative group">
                             <textarea
                                 name="message"
                                 value={formData.message}
                                 onChange={handleChange}
                                 required
                                 rows={6}
-                                placeholder="Tell me about your project..."
-                                className="w-full bg-transparent border border-neutral-700 px-4 py-3 focus:border-white focus:outline-none transition-colors resize-none"
+                                placeholder="Tell me about your project... *"
+                                className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300 resize-none"
                             />
+                            <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
                         </div>
 
-                        <motion.button
+                        {/* Submit Button */}
+                        <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full px-8 py-4 bg-white text-black font-medium tracking-wider uppercase transition-all duration-300 hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                            whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                            whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                            className="relative w-full px-8 py-5 bg-white text-black font-bold tracking-widest uppercase overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {isSubmitting ? 'SENDING...' : 'SEND INQUIRY'}
-                        </motion.button>
+                            <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
+                                {isSubmitting ? 'SENDING...' : 'SEND INQUIRY'}
+                            </span>
+                            <div className="absolute inset-0 bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                        </button>
 
+                        {/* Success Message */}
                         {submitMessage && (
-                            <motion.p 
-                                className="text-center text-sm text-neutral-300"
+                            <motion.div 
+                                className="text-center p-4 bg-green-900/20 border border-green-500/50"
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                             >
-                                {submitMessage}
-                            </motion.p>
+                                <p className="text-green-400">{submitMessage}</p>
+                            </motion.div>
                         )}
                     </form>
 
                     <div className="text-center mt-8 text-sm text-neutral-400">
                         Or email me directly at{' '}
-                        <a href="mailto:hello@emjcamera.com" className="text-white hover:underline">
+                        <a href="mailto:hello@emjcamera.com" className="text-white hover:underline transition-all">
                             hello@emjcamera.com
                         </a>
                     </div>
-                </motion.div>
+                </div>
 
             </div>
 
