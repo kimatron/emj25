@@ -15,11 +15,13 @@ const gsap = typeof window !== 'undefined' ? window.gsap : null;
 
 // Publication logos
 const PUBLICATIONS = [
-  { name: 'Irish Independent', logo: '/images/logos/irishindependent.png' },
+  { name: 'Irish Independent', logo: '/images/logos/irish-independent.png' },
   { name: 'The Irish Times', logo: '/images/logos/irishtimes.png' },
-  { name: 'Reuters', logo: '/images/logos/reuters_black.jpeg' },
-  { name: 'RTÉ News', logo: '/images/logos/reuters1.png' },
+  { name: 'Reuters', logo: '/images/logos/reuters1.png' },
+  { name: 'RTÉ News', logo: '/images/logos/rte.jpg' },  // Fixed: added leading /
   { name: 'The Irish Examiner', logo: '📄' },
+  { name: 'Galway Now', logo: '/images/logos/glwaynow.jpg' },
+  { name: 'Food & Wine', logo: '/images/logos/foodwine.jpg' },
 ];
 
 // Featured work - these will be newspaper/magazine clippings
@@ -30,6 +32,7 @@ const FEATURED_WORK = [
     publication: 'Irish Independent',
     date: 'January 2025',
     image: '/images/featured/news1.jpg',
+    // When your images are uploaded, change to: '/images/featured/news1.jpg'
     description: 'Snow storm coverage - front page feature',
   },
   {
@@ -38,6 +41,7 @@ const FEATURED_WORK = [
     publication: 'National Newspaper',
     date: 'January 2025',
     image: '/images/featured/news2.jpg',
+    // When your images are uploaded, change to: '/images/featured/news2.jpg'
     description: 'Featured weather photography',
   },
 ];
@@ -181,13 +185,7 @@ const About: React.FC = () => {
                 </div>
 
                 {/* As Seen In - Publications */}
-                <motion.div 
-                    className="publications-section mb-32 border-t border-neutral-800 pt-16"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                >
+                <div className="publications-section mb-32 border-t border-neutral-800 pt-16">
                     <h3 className="font-heading text-4xl tracking-wider text-center mb-12">AS SEEN IN</h3>
                     <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
                         {PUBLICATIONS.map((pub, index) => (
@@ -195,21 +193,23 @@ const About: React.FC = () => {
                                 key={pub.name}
                                 className="publication-logo text-center"
                             >
-                                <div className="text-5xl mb-2">{pub.logo}</div>
+                                {pub.logo.startsWith('/') || pub.logo.startsWith('http') ? (
+                                    <img 
+                                        src={pub.logo} 
+                                        alt={pub.name}
+                                        className="h-12 w-auto mx-auto mb-2 object-contain grayscale hover:grayscale-0 transition-all"
+                                    />
+                                ) : (
+                                    <div className="text-5xl mb-2">{pub.logo}</div>
+                                )}
                                 <p className="text-xs text-neutral-400 tracking-wider">{pub.name}</p>
                             </div>
                         ))}
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Featured Work */}
-                <motion.div 
-                    className="featured-section mb-32"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                >
+                <div className="featured-section mb-32">
                     <div className="text-center mb-16">
                         <h3 className="font-heading text-4xl tracking-wider mb-4">FEATURED WORK</h3>
                         <p className="text-neutral-400 max-w-2xl mx-auto">
@@ -219,12 +219,10 @@ const About: React.FC = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {FEATURED_WORK.map((work, index) => (
-                            <motion.div
+                            <div
                                 key={work.id}
-                                className="featured-item group cursor-pointer"
+                                className="featured-item group cursor-pointer transition-transform hover:-translate-y-2 duration-300"
                                 onClick={() => setSelectedWork(work)}
-                                whileHover={{ y: -8 }}
-                                transition={{ duration: 0.3 }}
                             >
                                 <div className="relative overflow-hidden aspect-[3/4] bg-neutral-900 mb-4">
                                     <img
@@ -238,10 +236,10 @@ const About: React.FC = () => {
                                     <h4 className="font-medium text-lg mb-2">{work.title}</h4>
                                     <p className="text-sm text-neutral-400">{work.description}</p>
                                 </div>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Contact Form */}
                 <motion.div 
@@ -374,16 +372,17 @@ const About: React.FC = () => {
             {/* Featured Work Lightbox */}
             {selectedWork && (
                 <motion.div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.95)' }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
                     onClick={() => setSelectedWork(null)}
                 >
                     <motion.div
                         className="relative max-w-5xl w-full"
-                        initial={{ scale: 0.9 }}
-                        animate={{ scale: 1 }}
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.3 }}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
