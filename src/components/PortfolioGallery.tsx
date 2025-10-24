@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PortfolioCategory } from '../types';
+import { PortfolioCategory } from '../../types';
 import Lightbox from './Lightbox';
 
 const PortfolioGallery: React.FC<{ category: PortfolioCategory; onClose: () => void }> = ({ category, onClose }) => {

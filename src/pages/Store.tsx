@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PRINTS } from '../constants';
-import { Print } from '../types';
+import { PRINTS } from '../../constants';
+import { Print } from '../../types';
 import PageTransition from '../components/PageTransition';
 import AnimatedTitle from '../components/AnimatedTitle';
 // Import Stripe checkout function
-import { createCheckout } from '../src/config/stripeConfig';
+import { createCheckout } from '../config/stripeConfig';
 
 const PRINT_SIZES = [
   { id: '8x10', name: '8" × 10"', priceModifier: 0 },

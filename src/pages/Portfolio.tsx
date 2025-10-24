@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CATEGORIES } from '../constants';
-import { PortfolioCategory } from '../types';
+import { CATEGORIES } from '../../constants';
+import { PortfolioCategory } from '../../types';
 import PageTransition from '../components/PageTransition';
 import PortfolioGallery from '../components/PortfolioGallery';
 import AnimatedTitle from '../components/AnimatedTitle';

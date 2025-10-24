@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Portfolio from './pages/Portfolio';
-import Store from './pages/Store';
-import About from './pages/About';
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
+import Header from './src/components/Header';
+import Footer from './src/components/Footer';
+import Home from './src/pages/Home';
+import Portfolio from './src/pages/Portfolio';
+import Store from './src/pages/Store';
+import About from './src/pages/About';
+import AdminLogin from './src/pages/AdminLogin';
+import AdminDashboard from './src/pages/AdminDashboard';
 
 const AnimatedCursor = () => {
     const cursorRef = useRef<HTMLDivElement>(null);
@@ -93,7 +93,7 @@ const AnimatedRoutes = () => {
 
     return (
         <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
+            <Routes location={location}>
                 {/* Public Routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/portfolio" element={<Portfolio />} />

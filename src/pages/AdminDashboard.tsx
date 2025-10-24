@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { CATEGORIES, PRINTS } from '../constants';
-import { Photo, Print } from '../types';
+import { CATEGORIES, PRINTS } from '../../constants';
+import { Photo, Print } from '../../types';
 
 // This will be replaced with actual API calls when backend is ready
 const useLocalStorage = (key: string, initialValue: any) => {
