@@ -151,3 +151,50 @@ img {
     min-height: -webkit-fill-available;
   }
 }
+
+/* Add this to your /src/index.css file */
+
+/* Dropdown options styling - dark background with light text */
+select option {
+  background-color: #171717 !important;
+  color: #e5e5e5 !important;
+  padding: 12px !important;
+}
+
+select option:disabled {
+  color: #a3a3a3 !important;
+}
+
+select option:checked {
+  background-color: #262626 !important;
+  font-weight: 500;
+}
+
+/* Date picker dark mode */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+  color: #e5e5e5;
+}
+
+input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  color: #e5e5e5;
+}
+
+input[type="date"]::-webkit-datetime-edit-text {
+  color: #737373;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  color: #e5e5e5;
+}
+
+/* Firefox date picker */
+input[type="date"] {
+  color-scheme: dark;
+}

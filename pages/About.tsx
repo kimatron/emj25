@@ -165,7 +165,7 @@ const About: React.FC = () => {
                 {/* Hero Section - Bio */}
                 <div className="about-hero flex flex-col lg:flex-row items-center gap-12 lg:gap-24 mb-32">
                     <motion.div 
-                        className="w-full lg:w-1/2 overflow-hidden"
+                        className="w-full lg:w-1/2 overflow-hidden group"
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -173,7 +173,7 @@ const About: React.FC = () => {
                         <img 
                             src="/images/about/portrait.jpeg"
                             alt="Emilija Jefremova" 
-                            className="about-portrait object-cover w-full h-auto"
+                            className="about-portrait object-cover w-full h-auto transition-transform duration-[5000ms] ease-out group-hover:scale-105"
                         />
                     </motion.div>
                     <motion.div 
@@ -211,7 +211,7 @@ const About: React.FC = () => {
                                     <img 
                                         src={pub.logo} 
                                         alt={pub.name}
-                                        className="h-12 w-auto mx-auto mb-2 object-contain grayscale hover:grayscale-0 transition-all"
+                                        className="h-12 w-auto mx-auto mb-2 object-contain transition-opacity hover:opacity-90"
                                     />
                                 ) : (
                                     <div className="text-5xl mb-2">{pub.logo}</div>
@@ -238,7 +238,7 @@ const About: React.FC = () => {
                                 className="featured-item group cursor-pointer transition-transform hover:-translate-y-2 duration-300"
                                 onClick={() => setSelectedWork(work)}
                             >
-                                <div className="relative overflow-hidden aspect-[3/4] bg-neutral-900 mb-4">
+                                <div className="relative overflow-hidden aspect-[3/4] mb-4">
                                     <img
                                         src={work.image}
                                         alt={work.title}
@@ -255,143 +255,129 @@ const About: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Contact Form */}
-                <div className="max-w-3xl mx-auto border-t border-neutral-800 pt-16">
-                    <div className="text-center mb-12">
-                        <h3 className="font-heading text-4xl tracking-wider mb-4">GET IN TOUCH</h3>
-                        <p className="text-neutral-400 max-w-xl mx-auto">
-                            Available for commissions, editorial assignments, and collaborations. 
-                            Fill out the form below and I'll get back to you within 24 hours.
+                {/* Contact Form - MINIMAL VERSION */}
+                <div className="max-w-2xl mx-auto border-t border-neutral-800 pt-16">
+                    <div className="text-center mb-8">
+                        <h3 className="font-heading text-3xl tracking-wider mb-3">GET IN TOUCH</h3>
+                        <p className="text-neutral-400 text-sm mb-6">
+                            Available for commissions and collaborations
                         </p>
+                        
+                        {/* Contact Information */}
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-8">
+                            <a 
+                                href="mailto:info@emjcamera.com" 
+                                className="flex items-center gap-2 text-neutral-300 hover:text-white transition-colors"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <span>info@emjcamera.com</span>
+                            </a>
+                            <a 
+                                href="tel:+353862226119" 
+                                className="flex items-center gap-2 text-neutral-300 hover:text-white transition-colors"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                </svg>
+                                <span>+353 86 222 6119</span>
+                            </a>
+                        </div>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Name and Email Row */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="relative group">
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300"
-                                    placeholder="Your Name *"
-                                />
-                                <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
-                            </div>
-                            <div className="relative group">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300"
-                                    placeholder="Email Address *"
-                                />
-                                <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
-                            </div>
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                                className="w-full bg-transparent border-b border-neutral-700 px-1 py-3 focus:border-white focus:outline-none transition-colors placeholder:text-neutral-500"
+                                placeholder="Your Name"
+                            />
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                                className="w-full bg-transparent border-b border-neutral-700 px-1 py-3 focus:border-white focus:outline-none transition-colors placeholder:text-neutral-500"
+                                placeholder="Email Address"
+                            />
                         </div>
 
-                        {/* Event Type Dropdown - NO EMOJIS */}
-                        <div className="relative group">
+                        {/* Event Type and Date Row */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <select
                                 name="eventType"
                                 value={formData.eventType}
                                 onChange={handleChange}
                                 required
-                                className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300 text-neutral-200 appearance-none cursor-pointer"
+                                className="w-full bg-transparent border-b border-neutral-700 px-1 py-3 focus:border-white focus:outline-none transition-colors text-neutral-200 appearance-none cursor-pointer"
                                 style={{
-                                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737373'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
                                     backgroundRepeat: 'no-repeat',
-                                    backgroundPosition: 'right 1rem center',
-                                    backgroundSize: '1.5rem'
+                                    backgroundPosition: 'right center',
+                                    backgroundSize: '1.2rem'
                                 }}
                             >
-                                <option value="" disabled>Select Event Type *</option>
-                                <option value="theatre">Theatre Performance</option>
-                                <option value="music">Music / Concert</option>
-                                <option value="wedding">Wedding</option>
-                                <option value="corporate">Corporate Event</option>
-                                <option value="editorial">Editorial / Press</option>
-                                <option value="portrait">Portrait Session</option>
-                                <option value="landscape">Landscape / Travel</option>
-                                <option value="other">Other</option>
+                                <option value="" disabled style={{ backgroundColor: '#171717', color: '#a3a3a3' }}>Event Type</option>
+                                <option value="theatre" style={{ backgroundColor: '#171717', color: '#e5e5e5' }}>Theatre</option>
+                                <option value="music" style={{ backgroundColor: '#171717', color: '#e5e5e5' }}>Music / Concert</option>
+                                <option value="wedding" style={{ backgroundColor: '#171717', color: '#e5e5e5' }}>Wedding</option>
+                                <option value="corporate" style={{ backgroundColor: '#171717', color: '#e5e5e5' }}>Corporate</option>
+                                <option value="editorial" style={{ backgroundColor: '#171717', color: '#e5e5e5' }}>Editorial / Press</option>
+                                <option value="portrait" style={{ backgroundColor: '#171717', color: '#e5e5e5' }}>Portrait</option>
+                                <option value="landscape" style={{ backgroundColor: '#171717', color: '#e5e5e5' }}>Landscape</option>
+                                <option value="other" style={{ backgroundColor: '#171717', color: '#e5e5e5' }}>Other</option>
                             </select>
-                            <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
-                        </div>
 
-                        {/* Date and Budget Row */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="relative group">
-                                <input
-                                    type="date"
-                                    name="date"
-                                    value={formData.date}
-                                    onChange={handleChange}
-                                    className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300 text-neutral-200"
-                                />
-                                <p className="text-xs text-neutral-500 mt-2 ml-1">Event Date (optional)</p>
-                                <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
-                            </div>
-                            <div className="relative group">
-                                <input
-                                    type="text"
-                                    name="budget"
-                                    value={formData.budget}
-                                    onChange={handleChange}
-                                    placeholder="Budget Range (optional)"
-                                    className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300"
-                                />
-                                <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
-                            </div>
-                        </div>
-
-                        {/* Message Textarea */}
-                        <div className="relative group">
-                            <textarea
-                                name="message"
-                                value={formData.message}
+                            <input
+                                type="date"
+                                name="date"
+                                value={formData.date}
                                 onChange={handleChange}
-                                required
-                                rows={6}
-                                placeholder="Tell me about your project... *"
-                                className="w-full bg-neutral-900/50 border-2 border-neutral-700 px-4 py-4 focus:border-white focus:bg-neutral-900 focus:outline-none transition-all duration-300 resize-none"
+                                min={new Date().toISOString().split('T')[0]}
+                                className="w-full bg-transparent border-b border-neutral-700 px-1 py-3 focus:border-white focus:outline-none transition-colors text-neutral-200 cursor-pointer"
+                                style={{ colorScheme: 'dark' }}
                             />
-                            <div className="absolute left-0 bottom-0 h-0.5 bg-white w-0 group-focus-within:w-full transition-all duration-500"></div>
                         </div>
 
-                        {/* Submit Button */}
+                        {/* Message */}
+                        <textarea
+                            name="message"
+                            value={formData.message}
+                            onChange={handleChange}
+                            required
+                            rows={4}
+                            placeholder="Tell me about your project..."
+                            className="w-full bg-transparent border-b border-neutral-700 px-1 py-3 focus:border-white focus:outline-none transition-colors resize-none placeholder:text-neutral-500"
+                        />
+
+                        {/* Submit Button - Minimal */}
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="relative w-full px-8 py-5 bg-white text-black font-bold tracking-widest uppercase overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full md:w-auto px-12 py-3 border-2 border-white text-white font-medium tracking-widest uppercase transition-all duration-300 hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
-                                {isSubmitting ? 'SENDING...' : 'SEND INQUIRY'}
-                            </span>
-                            <div className="absolute inset-0 bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                            {isSubmitting ? 'SENDING...' : 'SEND'}
                         </button>
 
                         {/* Success Message */}
                         {submitMessage && (
-                            <motion.div 
-                                className="text-center p-4 bg-green-900/20 border border-green-500/50"
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                            >
-                                <p className="text-green-400">{submitMessage}</p>
-                            </motion.div>
+                            <p className="text-sm text-green-400">{submitMessage}</p>
                         )}
                     </form>
 
-                    <div className="text-center mt-8 text-sm text-neutral-400">
-                        Or email me directly at{' '}
-                        <a href="mailto:hello@emjcamera.com" className="text-white hover:underline transition-all">
+                    <p className="text-center mt-6 text-xs text-neutral-500">
+                        Or email{' '}
+                        <a href="mailto:hello@emjcamera.com" className="text-neutral-300 hover:text-white transition-colors">
                             hello@emjcamera.com
                         </a>
-                    </div>
+                    </p>
                 </div>
 
             </div>
