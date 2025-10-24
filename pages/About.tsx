@@ -83,47 +83,8 @@ const About: React.FC = () => {
     const [selectedWork, setSelectedWork] = useState<typeof FEATURED_WORK[0] | null>(null);
 
     useEffect(() => {
-        // GSAP scroll animations
-        if (!gsap) return;
-        
-        const ScrollTrigger = window.ScrollTrigger;
-        if (ScrollTrigger) {
-            gsap.registerPlugin(ScrollTrigger);
-
-            // Parallax effect on hero image
-            gsap.to('.about-portrait', {
-                yPercent: 20,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: '.about-hero',
-                    scrub: 1,
-                },
-            });
-
-            // Stagger publication logos
-            gsap.from('.publication-logo', {
-                scrollTrigger: {
-                    trigger: '.publications-section',
-                    start: 'top center+=100',
-                },
-                y: 30,
-                opacity: 0,
-                stagger: 0.1,
-                duration: 0.6,
-            });
-
-            // Featured work items
-            gsap.from('.featured-item', {
-                scrollTrigger: {
-                    trigger: '.featured-section',
-                    start: 'top center+=100',
-                },
-                y: 50,
-                opacity: 0,
-                stagger: 0.15,
-                duration: 0.8,
-            });
-        }
+        // GSAP scroll animations - REMOVED to prevent overlay effect
+        // Images and logos now show immediately without fade-in
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
