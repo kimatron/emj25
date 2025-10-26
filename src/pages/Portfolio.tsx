@@ -6,6 +6,7 @@ import { PortfolioCategory } from '../../types';
 import PageTransition from '../components/PageTransition';
 import PortfolioGallery from '../components/PortfolioGallery';
 import AnimatedTitle from '../components/AnimatedTitle';
+import BackToTop from '../components/BackToTop';
 
 const CategoryCard: React.FC<{ category: PortfolioCategory; index: number }> = ({ category, index }) => {
     return (
@@ -132,6 +133,7 @@ const Portfolio: React.FC = () => {
             <AnimatePresence mode="wait">
                 {selectedCategory && <PortfolioGallery category={selectedCategory} onClose={handleClose} />}
             </AnimatePresence>
+            <BackToTop />
         </PageTransition>
     );
 };

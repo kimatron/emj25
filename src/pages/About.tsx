@@ -103,14 +103,14 @@ const INSTAGRAM_POSTS = [
     date: 'Nov 2024',
     link: 'https://instagram.com/p/yourpost5',
   },
-//   {
-//     id: 6,
-//     image: '/images/instagram/post3.jpg',
-//     caption: 'Concert moments',
-//     likes: 421,
-//     date: 'Nov 2024',
-//     link: 'https://instagram.com/p/yourpost6',
-//   },
+  {
+    id: 6,
+    image: '/images/instagram/post6.jpg',
+    caption: 'Concert moments',
+    likes: 421,
+    date: 'Nov 2024',
+    link: 'https://instagram.com/p/yourpost6',
+  },
 ];
 
 interface ContactFormData {
@@ -351,7 +351,7 @@ const About: React.FC = () => {
                                 </div>
                                 
                                 {/* Overlay - Always visible on mobile, hover on desktop */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 md:p-4">
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 md:p-4">
                                     <p className="text-white text-xs md:text-sm mb-1 md:mb-2 line-clamp-2 md:transform md:translate-y-4 md:group-hover:translate-y-0 md:transition-transform md:duration-300">
                                         {post.caption}
                                     </p>

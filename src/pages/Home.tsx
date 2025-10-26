@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
+import BackToTop from '../components/BackToTop';
 
 // Add your hero images here
 const HERO_IMAGES = [
@@ -191,6 +192,7 @@ const Home: React.FC = () => {
                     </motion.div>
                 </motion.div>
             </div>
+            <BackToTop />
         </PageTransition>
     );
 };
