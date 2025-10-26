@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 import AnimatedTitle from '../components/AnimatedTitle';
+import BackToTop from '../components/BackToTop';
 
 // Declare global GSAP type
 declare global {
@@ -64,31 +65,31 @@ const FEATURED_WORK = [
 const INSTAGRAM_POSTS = [
   {
     id: 1,
-    image: '/images/instagram/kingfish.jpg',
-    caption: 'Shooting for Kingfishr at Galways Arts fest was a blast',
+    image: '/images/instagram/post1.jpg',
+    caption: 'Golden hour at Connemara',
     likes: 234,
-    date: 'August 2025',
-    link: 'https://www.instagram.com/p/DQLnhW6jMmJ/?img_index=1',
+    date: 'Jan 2025',
+    link: 'https://instagram.com/p/yourpost1',
   },
   {
     id: 2,
-    image: '/images/instagram/music4.jpg',
+    image: '/images/instagram/post2.jpg',
     caption: 'Behind the scenes at the theatre',
     likes: 189,
     date: 'Jan 2025',
-    link: 'https://www.instagram.com/p/DMs9e7Vs2YU/?img_index=1',
+    link: 'https://instagram.com/p/yourpost2',
   },
   {
     id: 3,
-    image: '/images/travel-gems/mountain1.jpg',
-    caption: 'Feeling young and wild and free on my birthday in Switzerland. Thanks for all the bday love xx',
+    image: '/images/instagram/post3.jpg',
+    caption: 'Live music energy',
     likes: 312,
-    date: 'June 2024',
+    date: 'Dec 2024',
     link: 'https://instagram.com/p/yourpost3',
   },
   {
     id: 4,
-    image: '/images/theatre/theatre4.jpg',
+    image: '/images/instagram/post4.jpg',
     caption: 'Street photography in Galway',
     likes: 267,
     date: 'Dec 2024',
@@ -96,20 +97,20 @@ const INSTAGRAM_POSTS = [
   },
   {
     id: 5,
-    image: '/images/instagram/kingfish.jpg',
+    image: '/images/instagram/post5.jpg',
     caption: 'Dramatic landscapes',
     likes: 198,
     date: 'Nov 2024',
     link: 'https://instagram.com/p/yourpost5',
   },
-  {
-    id: 6,
-    image: '/images/instagram/em.jpg',
-    caption: 'Felt cute, might delete later xxx',
-    likes: 421,
-    date: 'Nov 2024',
-    link: 'https://instagram.com/p/yourpost6',
-  },
+//   {
+//     id: 6,
+//     image: '/images/instagram/post3.jpg',
+//     caption: 'Concert moments',
+//     likes: 421,
+//     date: 'Nov 2024',
+//     link: 'https://instagram.com/p/yourpost6',
+//   },
 ];
 
 interface ContactFormData {
@@ -207,7 +208,7 @@ const About: React.FC = () => {
 
     return (
         <PageTransition>
-            <div className="container mx-auto px-4 sm:px-6 py-24 sm:py-32">
+            <div className="container mx-auto px-4 sm:px-6 py-24 sm:py-32 pb-24 md:pb-32">
                 
                 {/* Hero Section - Bio */}
                 <div className="about-hero flex flex-col lg:flex-row items-center gap-12 lg:gap-24 mb-32">
@@ -241,6 +242,31 @@ const About: React.FC = () => {
                             <p>
                                 My work has been featured in major publications including the Irish Independent, The Irish Times, and Reuters, covering everything from breaking news to cultural events across Ireland.
                             </p>
+                        </div>
+                        
+                        {/* Subtle CTA - Contact Info */}
+                        <div className="mt-8 pt-6 border-t border-neutral-800">
+                            <p className="text-sm text-neutral-400 mb-4">Available for commissions</p>
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                                <a 
+                                    href="mailto:info@emjcamera.com"
+                                    className="inline-flex items-center gap-2 text-neutral-300 hover:text-white transition-colors text-sm"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    info@emjcamera.com
+                                </a>
+                                <a 
+                                    href="tel:+353862226119"
+                                    className="inline-flex items-center gap-2 text-neutral-300 hover:text-white transition-colors text-sm"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                    +353 86 222 6119
+                                </a>
+                            </div>
                         </div>
                     </motion.div>
                 </div>
@@ -290,7 +316,7 @@ const About: React.FC = () => {
                                 <span className="text-sm tracking-wider">@emjcamera</span>
                             </a>
                             <a 
-                                href="https://linkedin.com/in/emilijajefremova" 
+                                href="https://linkedin.com/in/yourprofile" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-2 text-neutral-300 hover:text-white transition-all duration-300 group"
@@ -304,45 +330,44 @@ const About: React.FC = () => {
                     </div>
 
                     {/* Instagram Grid with Masonry Layout */}
-                    <div className="instagram-grid grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                    <div className="instagram-grid grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-8">
                         {INSTAGRAM_POSTS.map((post, index) => (
                             <a
                                 key={post.id}
                                 href={post.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`instagram-post group relative overflow-hidden aspect-square ${
-                                    index === 0 || index === 5 ? 'md:row-span-2 md:col-span-1' : ''
+                                className={`instagram-post group relative overflow-hidden bg-neutral-900 ${
+                                    index === 0 || index === 5 ? 'md:row-span-2' : 'aspect-square'
                                 }`}
-                                style={{
-                                    
-                                }}
                             >
                                 {/* Image */}
-                                <img
-                                    src={post.image}
-                                    alt={post.caption}
-                                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                                />
+                                <div className="w-full h-full">
+                                    <img
+                                        src={post.image}
+                                        alt={post.caption}
+                                        className="w-full h-full object-cover transition-transform duration-700 ease-out md:group-hover:scale-110"
+                                    />
+                                </div>
                                 
-                                {/* Overlay on Hover */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                    <p className="text-white text-sm mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                {/* Overlay - Always visible on mobile, hover on desktop */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 md:p-4">
+                                    <p className="text-white text-xs md:text-sm mb-1 md:mb-2 line-clamp-2 md:transform md:translate-y-4 md:group-hover:translate-y-0 md:transition-transform md:duration-300">
                                         {post.caption}
                                     </p>
-                                    <div className="flex items-center gap-4 text-neutral-300 text-xs transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                                    <div className="flex items-center gap-3 md:gap-4 text-neutral-300 text-xs md:transform md:translate-y-4 md:group-hover:translate-y-0 md:transition-transform md:duration-300 md:delay-75">
                                         <span className="flex items-center gap-1">
-                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-3 h-3 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                             </svg>
                                             {post.likes}
                                         </span>
-                                        <span className="text-neutral-400">{post.date}</span>
+                                        <span className="text-neutral-400 text-[10px] md:text-xs">{post.date}</span>
                                     </div>
                                 </div>
 
-                                {/* Instagram Icon Badge */}
-                                <div className="absolute top-3 right-3 bg-white/10 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                {/* Instagram Icon Badge - Desktop only */}
+                                <div className="hidden md:block absolute top-3 right-3 bg-white/10 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                                     </svg>
@@ -561,6 +586,33 @@ const About: React.FC = () => {
                     </motion.div>
                 </motion.div>
             )}
+
+            {/* Back to Top Button */}
+            <BackToTop />
+
+            {/* Sticky Contact Bar - Mobile Only */}
+            <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-black/95 backdrop-blur-sm border-t border-neutral-800 p-3">
+                <div className="flex items-center justify-center gap-4">
+                    <a 
+                        href="mailto:info@emjcamera.com"
+                        className="flex items-center gap-2 px-4 py-2 bg-white text-black text-sm font-medium rounded hover:bg-neutral-200 transition-colors"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Email
+                    </a>
+                    <a 
+                        href="tel:+353862226119"
+                        className="flex items-center gap-2 px-4 py-2 border-2 border-white text-white text-sm font-medium rounded hover:bg-white hover:text-black transition-colors"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        Call
+                    </a>
+                </div>
+            </div>
         </PageTransition>
     );
 };
