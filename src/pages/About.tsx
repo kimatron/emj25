@@ -290,7 +290,7 @@ const About: React.FC = () => {
                                 <span className="text-sm tracking-wider">@emjcamera</span>
                             </a>
                             <a 
-                                href="https://linkedin.com/in/yourprofile" 
+                                href="https://linkedin.com/in/emilijajefremova" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-2 text-neutral-300 hover:text-white transition-all duration-300 group"
@@ -315,7 +315,7 @@ const About: React.FC = () => {
                                     index === 0 || index === 5 ? 'md:row-span-2 md:col-span-1' : ''
                                 }`}
                                 style={{
-                                    opacity: 0,
+                                    
                                 }}
                             >
                                 {/* Image */}
