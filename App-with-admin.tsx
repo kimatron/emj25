@@ -9,6 +9,8 @@ import Store from './src/pages/Store';
 import About from './src/pages/About';
 import AdminLogin from './src/pages/AdminLogin';
 import AdminDashboard from './src/pages/AdminDashboard';
+import ClientLogin from './src/pages/ClientLogin';
+import ClientPortal from './src/pages/ClientPortal';
 
 const AnimatedCursor = () => {
     const cursorRef = useRef<HTMLDivElement>(null);
@@ -51,28 +53,34 @@ const AnimatedCursor = () => {
     }, []);
 
     return (
-        <motion.div
-            ref={cursorRef}
-            className="fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-white pointer-events-none z-[100] hidden md:block"
-            style={{
-                left: position.x,
-                top: position.y,
-                transform: 'translate(-50%, -50%)',
-            }}
-            animate={{
-                scale: isHovering ? 1.5 : 1,
-                backgroundColor: isHovering ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
-            }}
-            transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-        />
+        <>
+            <div
+                ref={cursorRef}
+                className="hidden md:block fixed pointer-events-none z-[9999] mix-blend-difference"
+                style={{
+                    left: `${position.x}px`,
+                    top: `${position.y}px`,
+                    transform: 'translate(-50%, -50%)',
+                }}
+            >
+                <motion.div
+                    className="w-6 h-6 border-2 border-white rounded-full"
+                    animate={{
+                        scale: isHovering ? 1.5 : 1,
+                    }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                />
+            </div>
+        </>
     );
 };
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const location = useLocation();
     const isAdminRoute = location.pathname.startsWith('/admin');
+    const isClientRoute = location.pathname.startsWith('/client') || location.pathname.startsWith('/gallery');
 
-    if (isAdminRoute) {
+    if (isAdminRoute || isClientRoute) {
         return <>{children}</>;
     }
 
@@ -89,21 +97,32 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 const AnimatedRoutes = () => {
     const location = useLocation();
-    const isAdminRoute = location.pathname.startsWith('/admin');
 
     return (
         <AnimatePresence mode="wait">
-            <Routes location={location}>
-                {/* Public Routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/portfolio" element={<Portfolio />} />
-                <Route path="/store" element={<Store />} />
-                <Route path="/about" element={<About />} />
-                
-                {/* Admin Routes */}
-                <Route path="/admin" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            </Routes>
+            <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+            >
+                <Routes location={location}>
+                    {/* Public Routes */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/portfolio" element={<Portfolio />} />
+                    <Route path="/store" element={<Store />} />
+                    <Route path="/about" element={<About />} />
+                    
+                    {/* Client Portal Routes */}
+                    <Route path="/client" element={<ClientLogin />} />
+                    <Route path="/gallery/:token" element={<ClientPortal />} />
+                    
+                    {/* Admin Routes */}
+                    <Route path="/admin" element={<AdminLogin />} />
+                    <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                </Routes>
+            </motion.div>
         </AnimatePresence>
     );
 }
