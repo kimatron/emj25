@@ -4,17 +4,15 @@ import { PRINTS } from '../../constants';
 import { Print } from '../../types';
 import PageTransition from '../components/PageTransition';
 import AnimatedTitle from '../components/AnimatedTitle';
-import BackToTop from '../components/BackToTop';
-
-// Import checkout function (adjust path if needed)
-// For now, we'll use a simple checkout simulation
+// Import Stripe checkout function
+import { createCheckout } from '../config/stripeConfig';
 
 const PRINT_SIZES = [
-  { id: '8x10', name: '8" Ã— 10"', priceModifier: 0 },
-  { id: '11x14', name: '11" Ã— 14"', priceModifier: 25 },
-  { id: '16x20', name: '16" Ã— 20"', priceModifier: 50 },
-  { id: '20x24', name: '20" Ã— 24"', priceModifier: 75 },
-  { id: '24x36', name: '24" Ã— 36"', priceModifier: 120 },
+  { id: '8x10', name: '8" × 10"', priceModifier: 0 },
+  { id: '11x14', name: '11" × 14"', priceModifier: 25 },
+  { id: '16x20', name: '16" × 20"', priceModifier: 50 },
+  { id: '20x24', name: '20" × 24"', priceModifier: 75 },
+  { id: '24x36', name: '24" × 36"', priceModifier: 120 },
 ];
 
 const PAPER_TYPES = [
@@ -81,7 +79,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ print, onClose, onAddToCart
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.2 }}
       >
         <div className="grid md:grid-cols-2 gap-8 p-8">
           <div>
@@ -89,22 +86,15 @@ const ProductModal: React.FC<ProductModalProps> = ({ print, onClose, onAddToCart
           </div>
 
           <div className="flex flex-col">
-            <button
-              onClick={onClose}
-              className="self-end text-neutral-400 hover:text-white mb-4 transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            <h2 className="font-heading text-3xl tracking-wider mb-2">{print.title}</h2>
-            <p className="text-neutral-400 mb-8 text-sm">{print.description}</p>
+            <div className="mb-6">
+              <h2 className="font-heading text-4xl tracking-wider mb-2">{print.title}</h2>
+              <p className="text-neutral-400 text-sm leading-relaxed">{print.description}</p>
+            </div>
 
             <div className="mb-6">
               <label className="block text-xs font-medium mb-3 tracking-widest text-neutral-500">SIZE</label>
-              <div className="grid grid-cols-2 gap-2">
-                {PRINT_SIZES.map((size) => (
+              <div className="grid grid-cols-2 gap-3">
+                {PRINT_SIZES.map(size => (
                   <button
                     key={size.id}
                     onClick={() => setSelectedSize(size)}
@@ -116,7 +106,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ print, onClose, onAddToCart
                   >
                     <div className="font-medium">{size.name}</div>
                     {size.priceModifier > 0 && (
-                      <div className="text-xs mt-1 opacity-70">+â‚¬{size.priceModifier}</div>
+                      <div className="text-xs mt-1 opacity-70">+€{size.priceModifier}</div>
                     )}
                   </button>
                 ))}
@@ -124,33 +114,31 @@ const ProductModal: React.FC<ProductModalProps> = ({ print, onClose, onAddToCart
             </div>
 
             <div className="mb-6">
-              <label className="block text-xs font-medium mb-3 tracking-widest text-neutral-500">PAPER</label>
+              <label className="block text-xs font-medium mb-3 tracking-widest text-neutral-500">PAPER TYPE</label>
               <div className="space-y-2">
-                {PAPER_TYPES.map((paper) => (
+                {PAPER_TYPES.map(paper => (
                   <button
                     key={paper.id}
                     onClick={() => setSelectedPaper(paper)}
-                    className={`w-full p-3 border text-left text-sm transition-all ${
+                    className={`w-full p-3 border text-sm text-left transition-all ${
                       selectedPaper.id === paper.id
                         ? 'border-white bg-white text-black'
                         : 'border-neutral-700 hover:border-neutral-500'
                     }`}
                   >
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium">{paper.name}</span>
-                      {paper.priceModifier > 0 && (
-                        <span className="text-xs opacity-70">+â‚¬{paper.priceModifier}</span>
-                      )}
-                    </div>
+                    <div className="font-medium">{paper.name}</div>
+                    {paper.priceModifier > 0 && (
+                      <div className="text-xs mt-1 opacity-70">+€{paper.priceModifier}</div>
+                    )}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="mb-6">
-              <label className="block text-xs font-medium mb-3 tracking-widest text-neutral-500">FRAMING</label>
-              <div className="grid grid-cols-2 gap-2">
-                {FRAME_OPTIONS.map((frame) => (
+            <div className="mb-8">
+              <label className="block text-xs font-medium mb-3 tracking-widest text-neutral-500">FRAME</label>
+              <div className="grid grid-cols-2 gap-3">
+                {FRAME_OPTIONS.map(frame => (
                   <button
                     key={frame.id}
                     onClick={() => setSelectedFrame(frame)}
@@ -162,7 +150,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ print, onClose, onAddToCart
                   >
                     <div className="font-medium">{frame.name}</div>
                     {frame.priceModifier > 0 && (
-                      <div className="text-xs mt-1 opacity-70">+â‚¬{frame.priceModifier}</div>
+                      <div className="text-xs mt-1 opacity-70">+€{frame.priceModifier}</div>
                     )}
                   </button>
                 ))}
@@ -176,7 +164,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ print, onClose, onAddToCart
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="w-10 h-10 border border-neutral-700 hover:border-white transition-colors"
                 >
-                  âˆ’
+                  −
                 </button>
                 <span className="text-lg font-medium w-8 text-center">{quantity}</span>
                 <button
@@ -191,7 +179,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ print, onClose, onAddToCart
             <div className="mt-auto pt-6 border-t border-neutral-800">
               <div className="flex justify-between items-baseline mb-4">
                 <span className="text-sm tracking-widest text-neutral-500">TOTAL</span>
-                <span className="text-2xl font-light">â‚¬{(totalPrice * quantity).toFixed(2)}</span>
+                <span className="text-2xl font-light">€{(totalPrice * quantity).toFixed(2)}</span>
               </div>
               <button
                 onClick={handleAddToCart}
@@ -222,102 +210,107 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ items, onClose, onRemoveIte
 
   return (
     <motion.div
-      className="fixed inset-0 z-[60] flex items-end md:items-center md:justify-end bg-black/90"
+      className="fixed inset-0 z-[60] flex items-end justify-end bg-black/80 p-4"
       onClick={onClose}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
     >
       <motion.div
-        className="bg-[#0a0a0a] border-t md:border-l border-neutral-800 w-full md:w-[500px] h-[80vh] md:h-screen overflow-y-auto"
+        className="bg-[#0a0a0a] border border-neutral-800 w-full max-w-md h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         exit={{ x: '100%' }}
-        transition={{ type: 'tween', duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        transition={{ type: 'tween', duration: 0.3 }}
       >
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-8 pb-4 border-b border-neutral-800">
+        <div className="p-6 border-b border-neutral-800">
+          <div className="flex justify-between items-center">
             <h2 className="font-heading text-2xl tracking-wider">CART ({items.length})</h2>
-            <button onClick={onClose} className="text-neutral-400 hover:text-white transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <button onClick={onClose} className="text-2xl hover:text-neutral-400 transition-colors">&times;</button>
           </div>
+        </div>
 
+        <div className="flex-1 overflow-y-auto p-6">
           {items.length === 0 ? (
-            <div className="text-center py-16 text-neutral-500">
-              <p className="text-sm">Your cart is empty</p>
+            <div className="text-center text-neutral-400 mt-12">
+              <p>Your cart is empty</p>
             </div>
           ) : (
-            <>
-              <div className="space-y-6 mb-8">
-                {items.map((item) => (
-                  <div key={item.id} className="flex gap-4 pb-6 border-b border-neutral-800">
+            <div className="space-y-6">
+              {items.map(item => (
+                <div key={item.id} className="border border-neutral-800 p-4">
+                  <div className="flex gap-4">
                     <img src={item.print.src} alt={item.print.title} className="w-20 h-20 object-cover" />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm mb-1 truncate">{item.print.title}</h3>
-                      <p className="text-xs text-neutral-500 mb-3">
-                        {item.size.name} Â· {item.paper.name}
-                        {item.frame.id !== 'none' && ` Â· ${item.frame.name}`}
+                    <div className="flex-1">
+                      <h3 className="font-medium mb-1">{item.print.title}</h3>
+                      <p className="text-xs text-neutral-400 mb-2">
+                        {item.size.name}, {item.paper.name}
+                        {item.frame.id !== 'none' && `, ${item.frame.name}`}
                       </p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                            className="w-6 h-6 border border-neutral-700 hover:border-white text-xs transition-colors"
+                            className="w-6 h-6 border border-neutral-700 hover:border-white text-xs"
                           >
-                            âˆ’
+                            −
                           </button>
-                          <span className="text-xs w-6 text-center">{item.quantity}</span>
+                          <span className="text-sm w-6 text-center">{item.quantity}</span>
                           <button
                             onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                            className="w-6 h-6 border border-neutral-700 hover:border-white text-xs transition-colors"
+                            className="w-6 h-6 border border-neutral-700 hover:border-white text-xs"
                           >
                             +
                           </button>
                         </div>
-                        <button
-                          onClick={() => onRemoveItem(item.id)}
-                          className="text-xs text-neutral-500 hover:text-white transition-colors"
-                        >
-                          Remove
-                        </button>
+                        <div className="text-right">
+                          <p className="font-medium">€{item.totalPrice.toFixed(2)}</p>
+                          <button
+                            onClick={() => onRemoveItem(item.id)}
+                            className="text-xs text-red-400 hover:text-red-300 mt-1"
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm font-light">â‚¬{item.totalPrice.toFixed(2)}</p>
-                    </div>
                   </div>
-                ))}
-              </div>
-
-              <div className="space-y-2 mb-6 pb-6 border-b border-neutral-800 text-sm">
-                <div className="flex justify-between text-neutral-400">
-                  <span>Subtotal</span>
-                  <span>â‚¬{subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-neutral-400">
-                  <span>Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : `â‚¬${shipping.toFixed(2)}`}</span>
-                </div>
-                <div className="flex justify-between text-base font-medium pt-3">
-                  <span>Total</span>
-                  <span>â‚¬{total.toFixed(2)}</span>
-                </div>
-              </div>
-
-              <button
-                onClick={onCheckout}
-                className="w-full py-4 bg-white text-black font-medium tracking-wider text-sm hover:bg-neutral-100 transition-colors"
-              >
-                CHECKOUT
-              </button>
-            </>
+              ))}
+            </div>
           )}
         </div>
+
+        {items.length > 0 && (
+          <div className="border-t border-neutral-800 p-6">
+            <div className="space-y-2 mb-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Subtotal</span>
+                <span>€{subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Shipping</span>
+                <span>{shipping === 0 ? 'FREE' : `€${shipping.toFixed(2)}`}</span>
+              </div>
+              {subtotal < 100 && (
+                <p className="text-xs text-neutral-500 mt-2">
+                  Free shipping on orders over €100
+                </p>
+              )}
+              <div className="flex justify-between text-lg font-medium pt-2 border-t border-neutral-800">
+                <span>Total</span>
+                <span>€{total.toFixed(2)}</span>
+              </div>
+            </div>
+            <button
+              onClick={onCheckout}
+              className="w-full py-4 bg-white text-black font-medium tracking-wider text-sm hover:bg-neutral-100 transition-colors"
+            >
+              CHECKOUT
+            </button>
+          </div>
+        )}
       </motion.div>
     </motion.div>
   );
@@ -325,19 +318,34 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ items, onClose, onRemoveIte
 
 const PrintCard: React.FC<{ print: Print; index: number; onClick: () => void }> = ({ print, index, onClick }) => {
   return (
-    <div className="group cursor-pointer" onClick={onClick}>
-      <div className="overflow-hidden mb-3 bg-neutral-900">
+    <motion.div
+      className="group cursor-pointer"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.05 }}
+      onClick={onClick}
+    >
+      <div className="relative overflow-hidden aspect-[3/4] bg-neutral-900 mb-4">
         <img
           src={print.src}
           alt={print.title}
-          className="w-full h-auto transition-transform duration-700 group-hover:scale-105"
-          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
       </div>
-      <h3 className="text-base font-medium tracking-wide mb-1">{print.title}</h3>
-      <p className="text-neutral-500 text-sm mb-2 line-clamp-1">{print.description}</p>
-      <p className="text-sm font-light">From â‚¬{print.price.toFixed(2)}</p>
-    </div>
+      <div>
+        <h3 className="font-heading text-2xl tracking-wide mb-1">{print.title}</h3>
+        <p className="text-sm text-neutral-400 mb-2 line-clamp-2">{print.description}</p>
+        <p className="text-lg">From €{print.price.toFixed(2)}</p>
+        <button
+          className="px-6 py-2 border border-neutral-600 text-neutral-300 hover:bg-white hover:text-black transition-all duration-300 text-sm mt-3"
+          data-cursor-hover
+        >
+          View Options
+        </button>
+      </div>
+    </motion.div>
   );
 };
 
@@ -356,7 +364,6 @@ const Store: React.FC = () => {
       }
       return [...prev, item];
     });
-    setShowCart(true);
   };
 
   const handleRemoveItem = (id: string) => {
@@ -375,31 +382,35 @@ const Store: React.FC = () => {
     );
   };
 
-  const handleCheckout = () => {
-    // Calculate totals
-    const subtotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
-    const shipping = subtotal > 100 ? 0 : 12.50;
-    const total = subtotal + shipping;
+  const handleCheckout = async () => {
+    if (cartItems.length === 0) {
+      alert('Your cart is empty!');
+      return;
+    }
 
-    // Show demo checkout
-    const items = cartItems.map(item => 
-      `${item.print.title} (${item.size.name}, ${item.paper.name}${item.frame.id !== 'none' ? `, ${item.frame.name}` : ''}) x${item.quantity} - â‚¬${item.totalPrice.toFixed(2)}`
-    ).join('\n');
+    // Prepare items for Stripe
+    const stripeItems = cartItems.map(item => ({
+      name: `${item.print.title}`,
+      description: `${item.size.name}, ${item.paper.name}${item.frame.id !== 'none' ? `, ${item.frame.name}` : ''}`,
+      price: item.totalPrice / item.quantity, // Price per unit
+      quantity: item.quantity,
+      image: item.print.src
+    }));
 
-    alert(
-      `ðŸ›’ CHECKOUT\n\n` +
-      `${items}\n\n` +
-      `Subtotal: â‚¬${subtotal.toFixed(2)}\n` +
-      `Shipping: â‚¬${shipping.toFixed(2)}\n` +
-      `Total: â‚¬${total.toFixed(2)}\n\n` +
-      `Stripe integration will process this payment when deployed!\n\n` +
-      `For now, this is a demo. The real checkout will:\n` +
-      `âœ“ Open Stripe payment form\n` +
-      `âœ“ Collect card details securely\n` +
-      `âœ“ Collect shipping address\n` +
-      `âœ“ Process payment\n` +
-      `âœ“ Send order to admin\n` +
-      `âœ“ Email receipts to customer`
+    // Call Stripe checkout
+    createCheckout(
+      stripeItems,
+      () => {
+        // Success callback - clear cart
+        console.log('Checkout initiated successfully');
+        setCartItems([]);
+        setShowCart(false);
+      },
+      (error) => {
+        // Error callback
+        console.error('Checkout error:', error);
+        alert('Checkout failed. Please try again or contact support.');
+      }
     );
   };
 
@@ -452,7 +463,6 @@ const Store: React.FC = () => {
           />
         )}
       </AnimatePresence>
-      <BackToTop />
     </PageTransition>
   );
 };

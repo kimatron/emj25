@@ -66,10 +66,10 @@ const INSTAGRAM_POSTS = [
   {
     id: 1,
     image: '/images/instagram/post1.jpg',
-    caption: 'Golden hour at Connemara',
+    caption: 'What a blast getting to shoot my favourite band Kingfisher at Galway arts fest',
     likes: 234,
     date: 'Jan 2025',
-    link: 'https://instagram.com/p/yourpost1',
+    link: 'https://www.instagram.com/p/DMs9e7Vs2YU/?img_index=1',
   },
   {
     id: 2,
@@ -90,7 +90,7 @@ const INSTAGRAM_POSTS = [
   {
     id: 4,
     image: '/images/instagram/post4.jpg',
-    caption: 'Street photography in Galway',
+    caption: 'Street photography in Galway for Macnas parade',
     likes: 267,
     date: 'Dec 2024',
     link: 'https://instagram.com/p/yourpost4',
@@ -98,19 +98,19 @@ const INSTAGRAM_POSTS = [
   {
     id: 5,
     image: '/images/instagram/post5.jpg',
-    caption: 'Dramatic landscapes',
+    caption: 'felt cute, might delete later xoxo',
     likes: 198,
     date: 'Nov 2024',
     link: 'https://instagram.com/p/yourpost5',
   },
-  {
-    id: 6,
-    image: '/images/instagram/post6.jpg',
-    caption: 'Concert moments',
-    likes: 421,
-    date: 'Nov 2024',
-    link: 'https://instagram.com/p/yourpost6',
-  },
+//   {
+//     id: 6,
+//     image: '/images/instagram/post6.jpg',
+//     caption: 'Concert moments',
+//     likes: 421,
+//     date: 'Nov 2024',
+//     link: 'https://instagram.com/p/yourpost6',
+//   },
 ];
 
 interface ContactFormData {
